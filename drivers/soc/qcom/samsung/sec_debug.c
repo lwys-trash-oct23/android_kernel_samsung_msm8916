@@ -206,8 +206,8 @@ struct sec_debug_core_t {
 };
 
 /* enable sec_debug feature */
-static unsigned enable = 1;
-static unsigned enable_user = 1;
+static unsigned debug_enable = 1;
+static unsigned debug_enable_user = 1;
 static unsigned reset_reason = 0xFFEEFFEE;
 static char sec_build_info[100];
 static unsigned int secdbg_paddr;
@@ -225,8 +225,8 @@ unsigned int sec_dbg_level;
 
 uint runtime_debug_val;
 
-module_param_named(enable, enable, uint, 0644);
-module_param_named(enable_user, enable_user, uint, 0644);
+module_param_named(debug_enable, debug_enable, uint, 0644);
+module_param_named(debug_enable_user, debug_enable_user, uint, 0644);
 module_param_named(reset_reason, reset_reason, uint, 0644);
 module_param_named(runtime_debug_val, runtime_debug_val, uint, 0644);
 #ifdef CONFIG_SEC_SSR_DEBUG_LEVEL_CHK
@@ -1186,20 +1186,20 @@ bool kernel_sec_set_debug_level(int level)
 
 	switch (level) {
 	case KERNEL_SEC_DEBUG_LEVEL_LOW:
-		enable = 0;
-		enable_user = 0;
+		debug_enable = 1;
+		debug_enable_user = 1;
 		break;
 	case KERNEL_SEC_DEBUG_LEVEL_MID:
-		enable = 1;
-		enable_user = 0;
+		debug_enable = 1;
+		debug_enable_user = 1;
 		break;
 	case KERNEL_SEC_DEBUG_LEVEL_HIGH:
-		enable = 1;
-		enable_user = 1;
+		debug_enable = 1;
+		debug_enable_user = 1;
 		break;
 	default:
-		enable = 1;
-		enable_user = 1;
+		debug_enable = 1;
+		debug_enable_user = 1;
 	}
 
 	/* write to param */
@@ -1554,7 +1554,7 @@ static int sec_debug_panic_handler(struct notifier_block *nb,
 	else
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_KERNEL_PANIC);
 
-	if (!enable) {
+	if (!debug_enable) {
 #ifdef CONFIG_SEC_DEBUG_LOW_LOG
 		sec_debug_hw_reset();
 #endif
@@ -1591,7 +1591,7 @@ void sec_debug_prepare_for_wdog_bark_reset(void)
  */
 int sec_debug_dump_stack(void)
 {
-	if (!enable)
+	if (!debug_enable)
 		return -EPERM;
 
 	sec_debug_save_context();
@@ -1614,7 +1614,7 @@ void sec_debug_check_crash_key(unsigned int code, int value)
         static enum { NO, T1, T2, T3} state_tsp = NO;
 #endif
 
-	printk(KERN_ERR "%s code %d value %d state %d enable %d\n", __func__, code, value, state, enable);
+	printk(KERN_ERR "%s code %d value %d state %d enable %d\n", __func__, code, value, state, debug_enable);
 
 	if (code == KEY_POWER) {
 		if (value)
@@ -1623,7 +1623,7 @@ void sec_debug_check_crash_key(unsigned int code, int value)
 			sec_debug_set_upload_cause(UPLOAD_CAUSE_INIT);
 	}
 
-	if (!enable)
+	if (!debug_enable)
 		return;
 
 #if defined(CONFIG_TOUCHSCREEN_DUMP_MODE) || defined(CONFIG_TOUCHSCREEN_MMS252) || defined(CONFIG_TOUCHSCREEN_MMS300)
@@ -1663,29 +1663,30 @@ void sec_debug_check_crash_key(unsigned int code, int value)
 
 	switch (state) {
 	case NONE:
-		if (code == KEY_VOLUMEDOWN && value)
+		pr_err("%s: state = None\n", __func__);
+		if (code == KEY_VOLUMEUP && value)
 			state = STEP1;
 		else
 			state = NONE;
 		break;
 	case STEP1:
+		pr_err("%s: state = step1\n", __func__);
 		if (code == KEY_POWER && value)
 			state = STEP2;
 		else
 			state = NONE;
 		break;
 	case STEP2:
+		pr_err("%s: state = step2\n", __func__);
 		if (code == KEY_POWER && !value)
 			state = STEP3;
 		else
 			state = NONE;
 		break;
 	case STEP3:
+		pr_err("%s: state = step3\n", __func__);
 		if (code == KEY_POWER && value) {
-			emerg_pet_watchdog();
-			dump_all_task_info();
-			dump_cpu_stat();
-			panic("Crash Key");
+			machine_restart("recovery");
 		} else {
 			state = NONE;
 		}
@@ -2364,7 +2365,7 @@ int __init sec_debug_init(void)
 		pr_emerg("%s: restart_reason_ddr_address : 0x%x \n", __func__,(unsigned int)restart_reason_ddr_address);
 #endif
 
-	pr_emerg("%s: enable=%d\n", __func__, enable);
+	pr_emerg("%s: debug_enable=%d\n", __func__, debug_enable);
 	pr_emerg("%s:__raw_readl restart_reason=%d\n", __func__, __raw_readl(restart_reason));
 	/* check restart_reason here */
 	pr_emerg("%s: restart_reason : 0x%x\n", __func__,
@@ -2373,7 +2374,7 @@ int __init sec_debug_init(void)
 	register_reboot_notifier(&nb_reboot_block);
 	atomic_notifier_chain_register(&panic_notifier_list, &nb_panic_block);
 
-	if (!enable) {
+	if (!debug_enable) {
 		sec_do_bypass_sdi_execution_in_low();
 		return -EPERM;
 	}
@@ -2396,7 +2397,7 @@ int __init sec_debug_init(void)
 
 int sec_debug_is_enabled(void)
 {
-	return enable;
+	return debug_enable;
 }
 
 #ifdef CONFIG_SEC_SSR_DEBUG_LEVEL_CHK
@@ -2461,7 +2462,7 @@ void sec_debug_EMFILE_error_proc(unsigned long files_addr)
 	printk(KERN_ERR "Too many open files(%d:%s) at %pS\n",
 		current->tgid, current->group_leader->comm,__builtin_return_address(0));
 
-	if (!enable)
+	if (!debug_enable)
 		return;
 
 	/* We check EMFILE error in only "system_server","mediaserver" and "surfaceflinger" process.*/
@@ -2811,7 +2812,7 @@ __setup("sec_dbg=", sec_dbg_setup);
 
 static void sec_user_fault_dump(void)
 {
-	if (enable == 1 && enable_user == 1)
+	if (debug_enable == 1 && debug_enable_user == 1)
 		panic("User Fault");
 }
 

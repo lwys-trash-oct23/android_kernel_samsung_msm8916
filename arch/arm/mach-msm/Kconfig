@@ -495,6 +495,20 @@ config MACH_A5_EUR_OPEN
 		bool "Samsung A5 EUR Open"
 		help
 		  Support for Samsung A5 EUR Open device.
+
+config MACH_A5_CHN_OPEN
+	depends on SEC_A5_PROJECT
+		default n
+		bool "Samsung A5 CHN Open"
+		help
+		  Support for Samsung A5 China Open device.
+
+config MACH_A5_CHN_CTC
+	depends on SEC_A5_PROJECT
+		default n
+		bool "Samsung A5 CHN CTC"
+		help
+		  Support for Samsung A5 China CTC device.
 		  
 config SEC_A53G_EUR_PROJECT
 	depends on ARCH_MSM8916

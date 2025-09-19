@@ -226,7 +226,11 @@ static void bam_recv_notify(void *dev, struct sk_buff *skb)
 			p->stats.rx_packets, skb->len);
 
 		/* Deliver to network stack */
-		netif_rx_ni(skb);
+#if defined(CONFIG_MACH_A5_CHN_CTC) || defined(CONFIG_MACH_A5_CHN_OPEN)
+       netif_rx(skb);
+#else
+	   netif_rx_ni(skb);
+#endif
 	} else
 		pr_err("[%s] %s: No skb received",
 			((struct net_device *)dev)->name, __func__);

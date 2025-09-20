@@ -55,11 +55,6 @@ ifeq ($(CONFIG_ARCH_MSM8916),y)
       dtb-y += msm8916-sec-a53g-eur-r08.dtb
 	endif
 	ifeq ($(CONFIG_MACH_A5_CHN_OPEN),y)
-      dtb-y += msm8916-sec-a5-chn-r02.dtb
-      dtb-y += msm8916-sec-a5-chn-r04.dtb
-      dtb-y += msm8916-sec-a5-chn-r06.dtb
-      dtb-y += msm8916-sec-a5-chn-r07.dtb
-      dtb-y += msm8916-sec-a5-chn-r08.dtb
       dtb-y += msm8916-sec-a5-chn-r11.dtb
 	endif
 ifeq ($(CONFIG_SEC_E7_PROJECT),y)

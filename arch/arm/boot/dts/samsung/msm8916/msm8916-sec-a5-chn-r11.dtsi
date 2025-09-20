@@ -377,10 +377,6 @@
 		pinctrl-3 = <&cdc_pdm_lines_sus &ext_cdc_tlmm_lines_sus>;
 	};
 
-	i2c_1: i2c@78b5000 { /* BLSP1 QUP1 */
-		status="disable";
-	};
-
 	i2c_9:i2c@9 { /*SM5502 GPIO-I2C*/
 		cell-index = <9>;
 		compatible = "i2c-gpio";

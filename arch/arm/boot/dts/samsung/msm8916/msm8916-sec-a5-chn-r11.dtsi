@@ -14,8 +14,9 @@
 #include "msm8916-pinctrl-sec-a5-chn-r11.dtsi"
 #include "msm8916-camera.dtsi"
 #include "msm8916-camera-sensor-cdp-a5.dtsi"
-#include "../../../../../../drivers/video/msm/mdss/samsung/EA8061V_AMS497EE01/dsi_panel_EA8061V_AMS497EE01_HD_octa_video.dtsi"
 #include "msm8916-sec-a5-chn-battery-r00.dtsi"
+#include "../../../../../../drivers/video/msm/mdss/samsung/EA8061V_AMS497EE01/dsi_panel_EA8061V_AMS497EE01_HD_octa_video.dtsi"
+
 
 / {
 	aliases {
@@ -32,13 +33,29 @@
 };
 
 &soc {
+	ramoops {
+		compatible = "ramoops";
+		status = "ok";
+
+		android,ramoops-buffer-start = <0x9ff00000>;
+		android,ramoops-buffer-size = <0x100000>;
+		android,ramoops-console-size = <0x80000>;
+		android,ramoops-record-size = <0x7F800>;
+		android,ramoops-annotate-size = <0x800>;
+		android,ramoops-dump-oops = <0x1>;
+	};
+
 	samsung,vibrator {
-		compatible = "samsung_vib";
+		compatible = "haptic_vib";
 		pinctrl-names = "tlmm_motor_active","tlmm_motor_suspend";
 		pinctrl-0 = <&motor_en_active &motor_pwm_active>;
 		pinctrl-1 = <&motor_en_suspend &motor_pwm_suspend>;
 		samsung,vib_en = <&msm_gpio 76 0x1>;
 		samsung,vib_pwm = <&msm_gpio 50 0x1>;
+		samsung,vib_model = <1>;
+		samsung,is_pmic_vib_pwm = <0>;
+		samsung,pwm_period_us = <40>;
+		samsung,duty_us = <36>;
 		status = "ok";
 	};
 
@@ -212,11 +229,6 @@
 		qcom,key-codes = <158 139 172 217>;
 	};
 
-	sec_thermistor {
-		compatible = "sec,thermistor";
-		qcom,therm-vadc = <&pm8916_vadc>;
-	};
-
 	alps {
 			compatible = "alps-input";
 	};
@@ -245,7 +257,6 @@
 			clock-names = "nfc_clock";
 		};
 	};
-
 
        i2c_7: i2c@7 {
                 cell-index = <7>;
@@ -276,6 +287,7 @@
                 };
 
         };
+
 
 	i2c@78b6000 { /* BLSP1 QUP2 */
 		compatible = "qcom,i2c-msm-v2";
@@ -313,7 +325,6 @@
 			bma2x2,vdd-supply = <&pm8916_l17>;
 			bma2x2,vio-supply = <&pm8916_l5>;
 			bma2x2,gpio_int1 = <&msm_gpio 115 0x00>;
-
 			bma2x2,fs_range = <0x00>;
 			bma2x2,axis_map_x = <1>;
 			bma2x2,axis_map_y = <0>;
@@ -323,7 +334,6 @@
 			bma2x2,negate_z = <1>;
 			bma2x2,poll_interval = <100>;
 			bma2x2,min_interval = <2>;
-
 			bma2x2,supply_type = <1>;
 			bma2x2,accel_place = <5>;
 		};
@@ -366,6 +376,31 @@
 		pinctrl-2 = <&cdc_pdm_lines_act &ext_cdc_tlmm_lines_act>;
 		pinctrl-3 = <&cdc_pdm_lines_sus &ext_cdc_tlmm_lines_sus>;
 	};
+
+	i2c_9:i2c@9 { /*SM5502 GPIO-I2C*/
+		cell-index = <9>;
+		compatible = "i2c-gpio";
+		i2c-gpio-scl = <&msm_gpio 106 0x00>;
+		i2c-gpio-sda = <&msm_gpio 105 0x00>;
+		i2c-gpio,delay-us = <2>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		sm5502@25{
+			compatible = "sm5502,i2c";
+			reg = <0x25>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts= <12 0>;
+			sm5502,irq-gpio = <&msm_gpio 12 0x00>;
+			sm5502,gpio-sda = <&msm_gpio 105 0x00>;
+			sm5502,gpio-scl = <&msm_gpio 106 0x00>;
+			sm5502,uarton-gpio = <&msm_gpio 114 0x00>;
+			pinctrl-names = "sm5502_i2c_active","sm5502_i2c_suspend";
+			pinctrl-0 = <&muic_i2c_active &muic_int_pin &muic_chg_det>;
+			pinctrl-1 = <&muic_i2c_suspend &muic_int_pin &muic_chg_det>;
+		};
+	};
+
 };
 
 &blsp1_uart2 {
@@ -408,30 +443,6 @@
 
 	};
 
-	i2c_9:i2c@9 { /*SM5502 GPIO-I2C*/
-		cell-index = <9>;
-		compatible = "i2c-gpio";
-		i2c-gpio-scl = <&msm_gpio 106 0x00>;
-		i2c-gpio-sda = <&msm_gpio 105 0x00>;
-		i2c-gpio,delay-us = <2>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		sm5502@25{
-			compatible = "sm5502,i2c";
-			reg = <0x25>;
-			interrupt-parent = <&msm_gpio>;
-			interrupts= <12 0>;
-			sm5502,irq-gpio = <&msm_gpio 12 0x00>;
-			sm5502,gpio-sda = <&msm_gpio 105 0x00>;
-			sm5502,gpio-scl = <&msm_gpio 106 0x00>;
-			sm5502,uarton-gpio = <&msm_gpio 114 0x00>;
-			pinctrl-names = "sm5502_i2c_active","sm5502_i2c_suspend";
-			pinctrl-0 = <&muic_i2c_active &muic_int_pin &muic_chg_det>;
-			pinctrl-1 = <&muic_i2c_suspend &muic_int_pin &muic_chg_det>;
-		};
-	};
-
 	det_zones: det_zones {
 		#list-det-cells = <4>;
 	};
@@ -458,11 +469,20 @@
 		pinctrl-0 = <&earjack_det_act &earjack_switch_act>;
 		pinctrl-1 = <&earjack_det_sus &earjack_switch_sus>;
 	};
+
+	sec_thermistor {
+		compatible = "sec,thermistor";
+		qcom,therm-vadc = <&pm8916_vadc>;
+	};
+};
+
+&blsp1_uart1 {
+	status = "ok";
 };
 
 &usb_otg {
 	qcom,hsusb-otg-phy-init-seq =
-					<0x6B 0x81 0x0b 0x82 0xffffffff>;
+					<0x44 0x80 0x3B 0x81 0x24 0x82 0x13 0x83 0xffffffff>;
 };
 
 &sdhc_1 {
@@ -590,11 +610,17 @@
 };
 
 &pmx_mdss {
-                 qcom,num-grp-pins = <1>;
-                 qcom,pins =  <&gp 25>, <&gp 102>;
+    qcom,num-grp-pins = <1>;
+    qcom,pins = <&gp 25>, <&gp 102>;
 };
+
 &pmx_lcd_esd_det {
 	qcom,pins = <&gp 56>;
+};
+
+&dsi_ea8061_video_hd {
+	qcom,mdss-dsi-booting-brightness = <255>;
+	samsung,panel-extra-power-gpio1 = <&msm_gpio 87 0>;
 };
 
 &mdss_dsi0 {
@@ -605,6 +631,25 @@
 	qcom,platform-reset-gpio = <&msm_gpio 25 0>;
 	qcom,platform-enable-gpio = <&msm_gpio 102 0>;
 	qcom,esd-irq-gpio = <&msm_gpio 56 0>;
+};
+
+&pm8916_chg {
+	status = "ok";
+	qcom,charging-disabled;
+};
+
+/ {
+	mtp_batterydata: qcom,battery-data {
+		qcom,rpull-up-kohm = <100>;
+		qcom,vref-batt-therm = <1800000>;
+
+		#include "batterydata-palladium.dtsi"
+	};
+};
+
+&pm8916_bms {
+	status = "ok";
+	qcom,battery-data = <&mtp_batterydata>;
 };
 
 &qcom_tzlog {
@@ -650,7 +695,6 @@
       pinctrl-5 = <&qdsd_clk_spmi &qdsd_cmd_spmi
                   &qdsd_data0_spmi &qdsd_data3_spmi>;
 };
-
 &pm8916_vadc {
 	chan@13 {
 		label = "ap_thm";
@@ -661,5 +705,15 @@
 		qcom,scale-function = <1>;
 		qcom,hw-settle-time = <2>;
 		qcom,fast-avg-setup = <0>;
+	};
+};
+
+&spmi_bus {
+	qcom,pm8916@1 {
+		qcom,vibrator@c000 {
+			status = "okay";
+			qcom,vib-timeout-ms = <15000>;
+			qcom,vib-vtg-level-mV = <3100>;
+		};
 	};
 };

@@ -98,7 +98,6 @@
 			};
 		};
 
-
 		sdhc2_cd_pin {
 			qcom,pins = <&gp 38>;
 			qcom,num-grp-pins = <1>;
@@ -115,7 +114,7 @@
 		};
 
 		tsp_tkey_pinctrl {
-			qcom,pins = <&gp 60>,<&gp 73>;
+			qcom,pins = <&gp 60>, <&gp 73>;
 			qcom,num-grp-pins = <2>;
 			qcom,pin-func = <0>;
 			label = "tsp_tkey_pins";
@@ -523,7 +522,6 @@
 			};
 		};
 
-
 		wcnss_pmux_5wire: wcnss_pmux_5wire {
 			/* Uses general purpose pins */
 			qcom,pins = <&gp 40>, <&gp 41>,
@@ -575,7 +573,6 @@
 				bias-disable; /* No PULL */
 			};
 		};
-
 		chg_i2c {
 			/* CLK, DATA */
 			qcom,pins = <&gp 22>, <&gp 23>;
@@ -594,6 +591,73 @@
 			};
 		};
 
+		tlmm_rd_nfc_int{
+			qcom,pins = <&gp 21>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "tlmm_rd_nfc_int";
+
+			nfc_int_active: nfc_int_active {
+				drive-strength = <2>;
+				bias-disable; /* No PULL */
+			};
+
+			nfc_int_suspend: nfc_int_suspend {
+				drive-strength = <2>;
+				bias-disable; /* No PULL */
+			};
+		};
+
+		tlmm_nfc_enable{
+			qcom,pins = <&gp 20>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "tlmm_nfc_enable";
+
+			nfc_enable_active: nfc_enable_active {
+				drive-strength = <2>;
+				bias-pull-down; /* PULL DOWN */
+			};
+
+			nfc_enable_suspend: nfc_enable_suspend {
+				drive-strength = <2>;
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		tlmm_nfc_firmware{
+			qcom,pins = <&gp 49>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <1>;
+			label = "tlmm_nfc_firmware";
+
+			nfc_firmware_active: nfc_firmware_active {
+				drive-strength = <2>;
+				bias-pull-down; /* PULL DOWN */
+			};
+
+			nfc_firmware_suspend: nfc_firmware_suspend {
+				drive-strength = <2>;
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		tlmm_nfc_i2c{
+			qcom,pins = <&gp 0>, <&gp 1>;
+			qcom,pin-func = <0>;
+			qcom,num-grp-pins = <2>;
+			label = "tlmm_nfc_i2c";
+
+			nfc_i2c_active: nfc_i2c_active {
+				drive-strength = <2>;
+				bias-disable; /* No PULL */
+			};
+
+			nfc_i2c_suspend: nfc_i2c_suspend {
+				drive-strength = <2>;
+				bias-disable; /* No PULL */
+			};
+		};
 
 		tpiu_seta_2 {
 			qcom,pins = <&gp 9>;
@@ -1074,73 +1138,6 @@
 			};
 		};
 
-		tlmm_rd_nfc_int{
-			qcom,pins = <&gp 21>;
-			qcom,pin-func = <0>;
-			qcom,num-grp-pins = <1>;
-			label = "tlmm_rd_nfc_int";
-
-			nfc_int_active: nfc_int_active {
-				drive-strength = <2>;
-				bias-disable; /* No PULL */
-			};
-
-			nfc_int_suspend: nfc_int_suspend {
-				drive-strength = <2>;
-				bias-disable; /* No PULL */
-			};
-		};
-
-		tlmm_nfc_enable{
-			qcom,pins = <&gp 20>;
-			qcom,pin-func = <0>;
-			qcom,num-grp-pins = <1>;
-			label = "tlmm_nfc_enable";
-
-			nfc_enable_active: nfc_enable_active {
-				drive-strength = <2>;
-				bias-pull-down; /* PULL DOWN */
-			};
-
-			nfc_enable_suspend: nfc_enable_suspend {
-				drive-strength = <2>;
-				bias-pull-down; /* PULL DOWN */
-			};
-		};
-
-		tlmm_nfc_firmware{
-			qcom,pins = <&gp 49>;
-			qcom,pin-func = <0>;
-			qcom,num-grp-pins = <1>;
-			label = "tlmm_nfc_firmware";
-
-			nfc_firmware_active: nfc_firmware_active {
-				drive-strength = <2>;
-				bias-pull-down; /* PULL DOWN */
-			};
-
-			nfc_firmware_suspend: nfc_firmware_suspend {
-				drive-strength = <2>;
-				bias-pull-down; /* PULL DOWN */
-			};
-		};
-		tlmm_nfc_i2c{
-			qcom,pins = <&gp 0>, <&gp 1>;
-			qcom,pin-func = <0>;
-			qcom,num-grp-pins = <2>;
-			label = "tlmm_nfc_i2c";
-
-			nfc_i2c_active: nfc_i2c_active {
-				drive-strength = <2>;
-				bias-disable; /* No PULL */
-			};
-
-			nfc_i2c_suspend: nfc_i2c_suspend {
-				drive-strength = <2>;
-				bias-disable; /* No PULL */
-			};
-		};
-
 		earjack_det_gpio {
 			qcom,pins = <&gp 110>;
 			qcom,pin-func = <0>;
@@ -1301,6 +1298,7 @@
 			qcom,pin-func = <0>;
 			qcom,num-grp-pins = <2>;
 			label = "pmx_muic_i2c";
+
 			muic_i2c_active: muic_i2c_active {
 				drive-strength = <2>;
 				bias-disable; /* No PULL */
@@ -1336,7 +1334,6 @@
 				bias-disable; /* No PULL */
 			};
 		};
-
 		cci0_pinmux {
 			/* CLK, DATA */
 			qcom,pins = <&gp 29>, <&gp 30>;
@@ -1375,6 +1372,7 @@
 			};
 		};
 
+
 		cam_sensor_mclk1 {
 			/* MCLK */
 			qcom,pins = <&gp 27>;
@@ -1395,24 +1393,6 @@
 			};
 		};
 
-		cam_flash {
-			qcom,pins = <&gp 34>, <&gp 36>;
-			qcom,num-grp-pins = <2>;
-			qcom,pin-func = <0>;
-			label = "cam_flash";
-
-			cam_flash_active: default {
-				drive-strength = <2>;	/* 2 MA */
-				bias-pull-down; /* PULL DOWN */
-				output-low;
-			};
-
-			cam_flash_sleep: sleep {
-				drive-strength = <2>;	/* 2 MA */
-				bias-pull-down; /* PULL DOWN */
-				output-low;
-			};
-		};
 
 		cam_eeprom_wp {
 			/* EEP_WP */
@@ -1447,24 +1427,6 @@
 			};
 		};
 
-		cam_sensor_eeprom2 {
-			/* RESET, STANDBY */
-			qcom,pins =  <&gp 29>, <&gp 30>;
-			qcom,num-grp-pins = <2>;
-			qcom,pin-func = <0>;
-			label = "cam-eeprom-i2c";
-			/* active state */
-			cam_sensor_eeprom_default2: default {
-				drive-strength = <4>; /* 4 MA */
-				bias-disable = <0>; /* No PULL */
-			};
-			/*suspended state */
-			cam_sensor_eeprom_sleep2: sleep {
-				drive-strength = <4>; /* 4 MA */
-				bias-pull-down; /* PULL DOWN */
-			};
-		};
-
 		cam_sensor_rear {
 			/* RESET, STANDBY */
 			qcom,pins =  <&gp 35>;
@@ -1479,6 +1441,24 @@
 			/*suspended state */
 			cam_sensor_rear_sleep: sleep {
 				drive-strength = <2>; /* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		cam_sensor_eeprom2 {
+			/* RESET, STANDBY */
+			qcom,pins =  <&gp 29>, <&gp 30>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam-eeprom-i2c";
+			/* active state */
+			cam_sensor_eeprom_default2: default {
+				drive-strength = <4>; /* 4 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+			/*suspended state */
+			cam_sensor_eeprom_sleep2: sleep {
+				drive-strength = <4>; /* 4 MA */
 				bias-pull-down; /* PULL DOWN */
 			};
 		};
@@ -1501,6 +1481,26 @@
 			};
 		};
 
+
+		cam_flash {
+			qcom,pins = <&gp 34>, <&gp 36>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam_flash";
+
+			cam_flash_active: default {
+				drive-strength = <2>;	/* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+				output-low;
+			};
+
+			cam_flash_sleep: sleep {
+				drive-strength = <2>;	/* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+				output-low;
+			};
+		};
+
 		pmx_i2c_4 {
 			/* CLK, DATA */
 			qcom,pins = <&gp 14>, <&gp 15>;
@@ -1519,6 +1519,7 @@
 			};
 
 		};
+
 
 		fg_i2c {
 			/* CLK, DATA */
@@ -1553,7 +1554,6 @@
 				bias-pull-up;		/* PULL UP */
 			};
 		};
-
 		charger_int_pin {
 			qcom,pins = <&gp 62>;
 			qcom,num-grp-pins = <1>;

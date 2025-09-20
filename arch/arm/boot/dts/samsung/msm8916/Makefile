@@ -270,11 +270,6 @@ ifeq ($(CONFIG_SEC_A5_PROJECT),y)
 		dtb-y += msm8916-sec-a5u-kor-r00.dtb
 		dtb-y += msm8916-sec-a5u-kor-r02.dtb
 	else ifeq ($(CONFIG_MACH_A5_CHN_CTC),y)
-		dtb-y += msm8916-sec-a5-chn-r02.dtb
-		dtb-y += msm8916-sec-a5-chn-r04.dtb
-		dtb-y += msm8916-sec-a5-chn-r06.dtb
-		dtb-y += msm8916-sec-a5-chn-r07.dtb
-		dtb-y += msm8916-sec-a5-chn-r08.dtb
 		dtb-y += msm8916-sec-a5-chn-r11.dtb
 	endif
 endif

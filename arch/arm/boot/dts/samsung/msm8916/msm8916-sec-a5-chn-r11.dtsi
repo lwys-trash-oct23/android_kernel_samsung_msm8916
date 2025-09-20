@@ -52,6 +52,8 @@
 		pinctrl-1 = <&motor_en_suspend &motor_pwm_suspend>;
 		samsung,vib_en = <&msm_gpio 76 0x1>;
 		samsung,vib_pwm = <&msm_gpio 50 0x1>;
+		// TODO: investigate parameters, I mean the hardware seems to be similar to a5u
+		// but it doesn't hurt to check
 		samsung,vib_model = <1>;
 		samsung,is_pmic_vib_pwm = <0>;
 		samsung,pwm_period_us = <40>;
@@ -618,6 +620,7 @@
 	qcom,pins = <&gp 56>;
 };
 
+// TODO: necessary?
 &dsi_ea8061_video_hd {
 	qcom,mdss-dsi-booting-brightness = <255>;
 	samsung,panel-extra-power-gpio1 = <&msm_gpio 87 0>;
@@ -633,6 +636,7 @@
 	qcom,esd-irq-gpio = <&msm_gpio 56 0>;
 };
 
+// FIXME: a5 doesn't have this?
 &pm8916_chg {
 	status = "ok";
 	qcom,charging-disabled;
@@ -647,6 +651,7 @@
 	};
 };
 
+// FIXME: a5 doesn't have this?
 &pm8916_bms {
 	status = "ok";
 	qcom,battery-data = <&mtp_batterydata>;
@@ -708,6 +713,7 @@
 	};
 };
 
+// FIXME: a5 doesn't have this?
 &spmi_bus {
 	qcom,pm8916@1 {
 		qcom,vibrator@c000 {
